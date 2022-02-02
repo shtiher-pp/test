@@ -17,12 +17,22 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@app/modules/test/views/default';
+
+//    public $basePath = '@webroot';
+//    public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+//        'css/site.css',
+        'css/bootstrap.min.css',
+        'css/bootstrap.custom.css'
+
+
+
+
     ];
     public $js = [
+        'js/bootstrap.min.js',
+        'js/jquery.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
