@@ -5,6 +5,8 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language'=>'en',
+    'sourceLanguage'=> 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -56,7 +58,14 @@ $config = [
 
             ],
         ],
-
+        'i18n' => [
+            'translations'=>[
+                'common*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath'=> '@app/messages',
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];
