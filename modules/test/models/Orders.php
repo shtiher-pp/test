@@ -55,29 +55,31 @@ class Orders extends \yii\db\ActiveRecord
             'mode' => 'Mode',
         ];
     }
+
+    /**
+     * Формирует запрос с учетом условий фильтров
+     */
     public static function getQuery()
     {
         $query = new Query();
         $query->select(['O.id id' ,
-            'concat(U.first_name, " ", U.last_name) full_name',
+            'concat(U.first_name, ", ", U.last_name) full_name',
             'O.link link',
             'O.quantity quantity',
             'S.name service',
             'O.service_id service_id',
-            'P.status status',
+            'O.status status',
             'O.mode mode',
             'O.created_at created',])
             ->from(['orders O'])
             ->innerJoin('services S', 'S.id = O.service_id')
-            ->innerJoin('users U', 'U.id = O.user_id ')
-            ->innerJoin('payment_status P', 'P.id = O.status ');
+            ->innerJoin('users U', 'U.id = O.user_id ');
         if (isset($_GET['status'])) {
             $status = $_GET['status'];
             if (!is_numeric($status)){
                 $status=-1;
             }
-            $query->where("O.status=$status");
-
+            $query->where("O.status=:status", [':status' => $status]);
         }
         if   (isset($_GET['search'])){
             $search=$_GET['search'];
@@ -90,15 +92,15 @@ class Orders extends \yii\db\ActiveRecord
                     if (!is_numeric($search)){
                         $search=0;
                     }
-                    $query->where("O.id=$search");
+                    $query->where("O.id=:search",[':search'=>$search]);
                     if (isset($status)){
-                        $query->andWhere("O.status=$status");
+                        $query->andWhere("O.status=:status", [':status' => $status]);
                     }
                     break;
                 case 2:
-                    $query->where("O.link='$search'");
+                    $query->where("O.link=:search",[':search'=>$search]);
                     if (isset($status)){
-                        $query->andWhere("O.status=$status");
+                        $query->andWhere("O.status=:status", [':status' => $status]);
                     }
                     break;
                 case 3:
@@ -111,10 +113,10 @@ class Orders extends \yii\db\ActiveRecord
                         $lastName=0;
                     }
                     $query
-                        ->where("U.first_name='$firstName'")
-                        ->andWhere("U.last_name='$lastName'");
+                        ->where("U.first_name=:firstName", [':firstName' => $firstName])
+                        ->andWhere("U.last_name=:lastName",[':lastName'=>$lastName]);
                     if (isset($status)){
-                        $query->andWhere("O.status=$status");
+                        $query->andWhere("O.status=:status", [':status' => $status]);
                     }
                     break;
                 default:
@@ -122,13 +124,12 @@ class Orders extends \yii\db\ActiveRecord
             }
             noSearch:
         }
-
         if (isset($_GET['mode'])) {
             $mode=$_GET['mode'];
             if ($mode==NULL) {
                 goto noMode;
             }
-            $query->andWhere("O.mode=$mode");
+            $query->andWhere("O.mode=:mode",[':mode'=>$mode]);
             noMode:
         }
         if (isset($_GET['service'])) {
@@ -136,10 +137,9 @@ class Orders extends \yii\db\ActiveRecord
             if ($service==NULL) {
                 goto noService;
             }
-            $query->andWhere("O.service_id=$service");
+            $query->andWhere("O.service_id=:service",[':service'=>$service]);
             noService:
         }
         return $query;
     }
-
 }

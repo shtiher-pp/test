@@ -39,4 +39,5 @@ return [
     'Mentions Hashtag' => 'Упоминания хэштега',
     'Mentions User Followers' => 'Упоминает подписчиков пользователя',
     'Mentions Media Likers' => 'Упоминает медиалайкеров',
+    'Save result' => 'Сохранить в файл',
 ];

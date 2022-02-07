@@ -12,7 +12,7 @@ use yii\web\AssetBundle;
 /**
  * Main application asset bundle.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
+ * @author Qiang Xue <qiang.xue@gmail.com>a
  * @since 2.0
  */
 class AppAsset extends AssetBundle
@@ -23,16 +23,12 @@ class AppAsset extends AssetBundle
 //    public $baseUrl = '@web';
     public $css = [
 //        'css/site.css',
+        'css/bootstrap.custom.css',
         'css/bootstrap.min.css',
-        'css/bootstrap.custom.css'
-
-
-
-
     ];
     public $js = [
+        'js/jquery.min.js',
         'js/bootstrap.min.js',
-        'js/jquery.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

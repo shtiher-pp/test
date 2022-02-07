@@ -42,18 +42,19 @@ class Services extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
-
+    /**
+     * Возвращает список сервисов с количеством записей в заказах
+     */
     public static function getServices()
     {
         $services=new Query();
-        $services->select(['count(O.service_id) service_count',
-            'O.service_id service_id',
-            'S.name service'])
-            ->from(['orders O'])
-            ->innerJoin('services S', 'S.id = O.service_id')
-        ->groupBy('service')
+        $services->select(['s.id service_id',
+            's.name service',
+            'COUNT(o.service_id) service_count'])
+            ->from(['services s'])
+            ->innerJoin('orders o', 'o.service_id = s.id')
+        ->groupBy('o.service_id')
         ->orderBy('service_count desc');
         return $services;
     }
-
 }

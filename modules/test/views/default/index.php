@@ -1,83 +1,21 @@
 <?php
-use yii\helpers\Html;
 use yii\widgets\LinkPager;
-Yii::$app->language = 'ru';
-//var_dump(((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-//var_dump($services);
+use yii\helpers\Url;
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>test</title>
-  <style>
-    .label-default{
-      border: 1px solid #ddd;
-      background: none;
-      color: #333;
-      min-width: 30px;
-      display: inline-block;
-    }
-
-
-    .label-id {
-        border: 1px solid #ddd;
-        background: none;
-        min-width: 30px;
-        display: inline-block;
-        padding: 0.2em 0.6em 0.3em;
-        font-size: 75%;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: 1px;
-        border-radius: 0.25em;
-    }
-    /*.container-fluid{*/
-    /*    position: fixed;*/
-    /*    right: 0;*/
-    /*    left: 0;*/
-    /*    z-index: 1030;*/
-
-    }
-  </style>
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-</head>
-<body>
-<nav class="navbar navbar-fixed-top navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/test/default/"><?=Yii::t('common', 'Orders') ?></a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<div style="
+    padding-top: 60px;
+"></div>
 <div class="container-fluid">
   <ul class="nav nav-tabs p-b">
-    <li <?= !isset($_GET['status'])? 'class="active"' : '' ?>><a href="/test/default/"><?=Yii::t('common', 'All orders') ?></a></li>
-    <li <?= isset($_GET['status']) ? ($_GET['status']==0? 'class="active"':'' ): '' ?> ><a href="/test/default/index?status=0"><?=Yii::t('common', 'Pending') ?></a></li>
-    <li <?= isset($_GET['status']) ? ($_GET['status']==1? 'class="active"':'' ): '' ?>><a href="/test/default/index?status=1"><?=Yii::t('common', 'In progress') ?></a></li>
-    <li <?= isset($_GET['status']) ? ($_GET['status']==2? 'class="active"':'' ): '' ?>><a href="/test/default/index?status=2"><?=Yii::t('common', 'Completed') ?></a></li>
-    <li <?= isset($_GET['status']) ? ($_GET['status']==3? 'class="active"':'' ): '' ?>><a href="/test/default/index?status=3"><?=Yii::t('common', 'Canceled') ?></a></li>
-    <li <?= isset($_GET['status']) ? ($_GET['status']==4? 'class="active"':'' ): '' ?>><a href="/test/default/index?status=4"><?=Yii::t('common', 'Error') ?></a></li>
+    <li <?= !isset($_GET['status'])? 'class="active"' : '' ?>><a href="<?=Url::to(['/test/default'])?>"><?=Yii::t('common', 'All orders') ?></a></li>
+    <li <?= isset($_GET['status']) ? ($_GET['status']==0? 'class="active"':'' ): '' ?> ><a href="<?=Url::to(['/test/default', 'status' => 0])?>"><?=Yii::t('common', $status[0]) ?></a></li>
+    <li <?= isset($_GET['status']) ? ($_GET['status']==1? 'class="active"':'' ): '' ?>><a href="<?=Url::to(['/test/default', 'status' => 1])?>"><?=Yii::t('common', $status[1]) ?></a></li>
+    <li <?= isset($_GET['status']) ? ($_GET['status']==2? 'class="active"':'' ): '' ?>><a href="<?=Url::to(['/test/default', 'status' => 2])?>"><?=Yii::t('common', $status[2]) ?></a></li>
+    <li <?= isset($_GET['status']) ? ($_GET['status']==3? 'class="active"':'' ): '' ?>><a href="<?=Url::to(['/test/default', 'status' => 3])?>"><?=Yii::t('common', $status[3]) ?></a></li>
+    <li <?= isset($_GET['status']) ? ($_GET['status']==4? 'class="active"':'' ): '' ?>><a href="<?=Url::to(['/test/default', 'status' => 4])?>"><?=Yii::t('common', $status[4]) ?></a></li>
     <li class="pull-right custom-search">
-      <form class="form-inline" action="<?='/test/default/index?'?>" method="get">
+      <form class="form-inline" action="<?=Url::to(['/test/default'])?>" method="get">
         <div class="input-group">
             <?= isset($_GET['status']) ? '<input type="hidden" name="status" value="'.$_GET['status'].'">': ''  ?>
           <input type="text" name="search" class="form-control" value="" placeholder="<?=Yii::t('common', 'Search orders') ?>">
@@ -107,9 +45,9 @@ Yii::$app->language = 'ru';
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li class="active"><a href="<?= 'index?'.http_build_query(array_merge($_GET, ["service"=>'']))?>"><?=Yii::t('common', 'All') ?> (<?=$totalCount?>)</a></li>
+            <li class="active"><a href="<?=Url::to(['/test/default']).'?'.http_build_query(array_merge($_GET, ["service"=>'']))?>"><?=Yii::t('common', 'All') ?> (<?=$totalCount?>)</a></li>
               <?php foreach ($services as $service): ?>
-            <li><a href="<?= 'index?'.http_build_query(array_merge($_GET, ["service"=>$service['service_id']]))?>"><span class="label-id"><?=$service['service_count']?></span> <?=Yii::t('common', $service['service'])?></a></li>
+            <li><a href="<?=Url::to(['/test/default']).'?'.http_build_query(array_merge($_GET, ["service"=>$service['service_id']]))?>"><span class="label-id"><?=$service['service_count']?></span> <?=Yii::t('common', $service['service'])?></a></li>
               <?php endforeach; ?>
           </ul>
         </div>
@@ -122,9 +60,9 @@ Yii::$app->language = 'ru';
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li class="active"><a href="<?= 'index?'.http_build_query(array_merge($_GET, ["mode"=>'']))?>"><?=Yii::t('common', 'All') ?></a></li>
-            <li><a href="<?= 'index?'.http_build_query(array_merge($_GET, ["mode"=>0]))?>"><?=Yii::t('common', 'Manual') ?></a></li>
-            <li><a href="<?= 'index?'.http_build_query(array_merge($_GET, ["mode"=>1]))?>"><?=Yii::t('common', 'Auto') ?></a></li>
+            <li class="active"><a href="<?=Url::to(['/test/default']).'?'.http_build_query(array_merge($_GET, ["mode"=>'']))?>"><?=Yii::t('common', 'All') ?></a></li>
+            <li><a href="<?=Url::to(['/test/default']).'?'.http_build_query(array_merge($_GET, ["mode"=>0]))?>"><?=Yii::t('common', 'Manual') ?></a></li>
+            <li><a href="<?=Url::to(['/test/default']).'?'.http_build_query(array_merge($_GET, ["mode"=>1]))?>"><?=Yii::t('common', 'Auto') ?></a></li>
           </ul>
         </div>
       </th>
@@ -141,7 +79,7 @@ Yii::$app->language = 'ru';
         <td class="service">
             <span class="label-id"><?=$order['service_id']?></span><?= Yii::t('common', $order['service']) ?>
         </td>
-        <td><?= Yii::t('common', $order['status']) ?></td>
+        <td><?= Yii::t('common', $status[$order['status']]) ?></td>
         <td><?= !$order['mode'] ? Yii::t('common', 'Manual') : Yii::t('common', 'Auto') ?></td>
         <td><span class="nowrap"><?= date('Y-m-d',$order['created']) ?></span></br><span class="nowrap"><?= date('H:i:s',$order['created']) ?></span></td>
     </tr>
@@ -166,9 +104,10 @@ Yii::$app->language = 'ru';
                 <?= (($_GET['page']-1)*$pagination->defaultPageSize)+1 .' to '. $pagination->totalCount .' of '. $pagination->totalCount?>
             <?php endif; ?>
         </div>
+        <div style="padding-right: 50px;">
+        <span style="float: right;">
+        <a href="<?=Url::to(['/test/export']).'?'.http_build_query(array_merge($_GET))?>"><?=Yii::t('common', Yii::t('common', 'Save result')) ?></a></span>
+        </div>
     </div>
 </div>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-</body>
-<html>
+</br>
