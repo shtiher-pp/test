@@ -2,6 +2,7 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+/* @var $param array */
 
 use app\assets\OrdersAsset;
 use yii\bootstrap4\Html;
@@ -70,17 +71,17 @@ OrdersAsset::register($this);
         </div>
     </nav>
 </header>
-<?php $this->beginContent('@app/modules/orders/views/layouts/_filters.php'); ?>
-<?= $content ?>
-<?php $this->endContent(); ?>
-<?php $this->beginContent('@app/modules/orders/views/layouts/_order_list.php'); ?>
-<?= $content ?>
-<?php $this->endContent(); ?>
-<?php $this->beginContent('@app/modules/orders/views/layouts/_pagination.php'); ?>
-<?= $content ?>
-<?php $this->endContent(); ?>
-<?= $content ?>
+
+
+
+
 </body>
 <?php $this->endBody() ?>
 </html>
 <?php $this->endPage() ?>
+<?php
+echo '<pre>';
+//print_r($param);
+echo '</pre>';
+
+?>

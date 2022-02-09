@@ -1,6 +1,7 @@
 
 
 
+
 body {
   padding-top: 65px;
   padding-bottom: 30px;
@@ -2946,4 +2947,21 @@ input[type="checkbox"].selectOrder{
     min-width: 100%;
   }
 }
+
+.label-default{
+  border: 1px solid #ddd;
+  background: none;
+  color: #333;
+  min-width: 30px;
+  display: inline-block;
+}
+
+.export-csv-link {
+  padding-right: 15px;
+
+}
+.export-csv-link>span {
+  float: right;
+}
+
 
