@@ -2,6 +2,7 @@
 
 namespace app\modules\orders\controllers;
 
+use app\modules\orders\models\SearhOrders;
 use yii\data\Pagination;
 use yii\web\Controller;
 use app\modules\orders\models\Services;
@@ -24,37 +25,36 @@ class OrdersController extends Controller
 
     {
 //        включить локаль ru
-//        Yii::$app->language = 'ru';
-        $this->layout = '_orders';
+        Yii::$app->language = 'ru';
+        $this->layout = '_layout';
         $param = static::getParams();
         $services = Services::getServices()->all();
         $totalCount = Orders::find()->count();
-        $query = Orders::getQuery($param);
+        $query = SearhOrders::getQuery($param);
         $pagination = new Pagination([
             'defaultPageSize' => static::DEFAULT_PAGE_SIZE,
             'totalCount' => $query->count(),
             'pageSizeLimit' => false,
         ]);
         $orders = $query
-            ->orderBy(['id' => SORT_DESC])
             ->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
         $status = Orders::getStatuses();
         $mode = Orders::getMode();
+        $search = Orders::getSearchType();
         $pages = static::getPages($param, $pagination);
-
-        Yii::$app->view->params['params'] = [
-            'orders' => $orders,
+        return $this->render('index', [
+        'orders' => $orders,
             'pagination' => $pagination,
             'services' => $services,
             'totalCount' => $totalCount,
             'status' => $status,
             'mode' => $mode,
+            'search'=> $search,
             'param' => $param,
-            'pages' => $pages
-        ];
-        return $this->render('index');
+            'pages' => $pages,
+            ]);
     }
 
     /**
@@ -84,7 +84,9 @@ class OrdersController extends Controller
     }
 
     /**
-     * @return array
+     * @param $param
+     * @param $pagination
+     * @return string
      */
 
     public static function getPages($param, $pagination): string

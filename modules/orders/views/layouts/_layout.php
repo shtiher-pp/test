@@ -2,13 +2,22 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-/* @var $param array */
+/** @var $orders array */
+/** @var $services array */
+/** @var $pagination array */
+/** @var $totalCount string */
+/** @var $status array */
+/** @var $mode array */
+/** @var $pages array */
+/** @var $param array */
+
 
 use app\assets\OrdersAsset;
 use yii\bootstrap4\Html;
 use yii\helpers\Url;
 
 OrdersAsset::register($this);
+
 ?>
 
 <?php $this->beginPage() ?>
@@ -22,29 +31,7 @@ OrdersAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <title></title>
-    <style>
-        .label-default{
-            border: 1px solid #ddd;
-            background: none;
-            color: #333;
-            min-width: 30px;
-            display: inline-block;
-        }
-        .label-id {
-            border: 1px solid #ddd;
-            background: none;
-            min-width: 30px;
-            display: inline-block;
-            padding: 0.2em 0.6em 0.3em;
-            font-size: 75%;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: 1px;
-            border-radius: 0.25em;
-        }
-    </style>
+
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -72,16 +59,9 @@ OrdersAsset::register($this);
     </nav>
 </header>
 
-
-
+<?= $content ?>
 
 </body>
 <?php $this->endBody() ?>
 </html>
 <?php $this->endPage() ?>
-<?php
-echo '<pre>';
-//print_r($param);
-echo '</pre>';
-
-?>

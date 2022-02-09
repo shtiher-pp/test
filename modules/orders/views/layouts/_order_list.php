@@ -10,13 +10,6 @@ use yii\helpers\Url;
 /** @var $mode array */
 /** @var $orders array */
 
-$param = $this->params['params']['param'];
-$status = $this->params['params']['status'];
-$services = $this->params['params']['services'];
-$totalCount = $this->params['params']['totalCount'];
-$mode = $this->params['params']['mode'];
-$orders = $this->params['params']['orders'];
-
 ?>
   <table class="table order-table">
     <thead>
@@ -48,8 +41,8 @@ $orders = $this->params['params']['orders'];
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
             <li class="active"><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>'']))?>"><?=Yii::t('common', 'All') ?></a></li>
-            <li><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>0]))?>"><?=Yii::t('common', $mode[0]) ?></a></li>
-            <li><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>1]))?>"><?=Yii::t('common', $mode[1]) ?></a></li>
+            <li><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>0]))?>"><?=$mode[0]?></a></li>
+            <li><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>1]))?>"><?=$mode[1]?></a></li>
         </ul>
     </div>
 </th>
@@ -66,7 +59,7 @@ $orders = $this->params['params']['orders'];
         <td class="service">
             <span class="label-id"><?=$order['service_id']?></span><?= Yii::t('common', $order['service']) ?>
         </td>
-        <td><?= Yii::t('common', $status[$order['status']]) ?></td>
+        <td><?= $status[$order['status']] ?></td>
         <td><?= !$order['mode'] ? Yii::t('common', $mode[0]) : Yii::t('common', $mode[1]) ?></td>
         <td><span class="nowrap"><?= date('Y-m-d',$order['created']) ?></span></br><span class="nowrap"><?= date('H:i:s',$order['created']) ?></span></td>
     </tr>

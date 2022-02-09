@@ -12,21 +12,23 @@ class m220204_111613_orders extends Migration
      */
     public function safeUp()
     {
-        $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_estonian_ci ENGINE=InnoDB ROW_FORMAT=COMPACT';
-        }
-        $this->createTable('orders', [
-            'id' => $this->primaryKey()->notNull(),
-            'user_id' => $this->integer()->notNull(),
-            'link' => $this->string(300)->notNull(),//->append('CHARACTER SET utf8mb4 COLLATE utf8mb4_estonian_ci'),
-            'quantity' => $this->integer()->notNull(),
-            'service_id' => $this->integer()->notNull(),
-            'status' => $this->tinyInteger(1)->notNull() . ' COMMENT "0 - Pending, 1 - In progress, 2 - Completed, 3 - Canceled, 4 - Fail"',
-            'created_at' => $this->integer()->notNull(),
-            'mode' => $this->tinyInteger(1)->notNull() . ' COMMENT "0 - Manual, 1 - Auto"',
-        ], $tableOptions);
- //       $this->createIndex('id', 'orders', 'id', true);
+        $this->execute(/* @lang MySQL */ <<<SQLCOMMAND
+CREATE TABLE `orders` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `link` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_estonian_ci NOT NULL,
+  `quantity` int NOT NULL,
+  `service_id` int NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '0 - Pending, 1 - In progress, 2 - Completed, 3 - Canceled, 4 - Fail',
+  `created_at` int NOT NULL,
+  `mode` tinyint(1) NOT NULL COMMENT '0 - Manual, 1 - Auto'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `orders`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100001;
+SQLCOMMAND
+        );
     }
 
     /**

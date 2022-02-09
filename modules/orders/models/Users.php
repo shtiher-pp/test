@@ -20,7 +20,7 @@ class Users extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName(): string
+    public static function tableName()
     {
         return 'users';
     }
@@ -28,7 +28,7 @@ class Users extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             [['first_name', 'last_name'], 'required'],
@@ -39,7 +39,7 @@ class Users extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels(): array
+    public function attributeLabels()
     {
         return [
             'id' => 'ID',

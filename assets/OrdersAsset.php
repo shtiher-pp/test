@@ -19,7 +19,7 @@ class OrdersAsset extends AssetBundle
 {
     public $sourcePath = '@app/modules/orders/views/orders';
     public $css = [
-        'css/bootstrap.custom.css',
+        'css/custom.css',
         'css/bootstrap.min.css',
     ];
     public $js = [
