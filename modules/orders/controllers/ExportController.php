@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\modules\orders\models\Orders;
 
 class ExportController extends Controller {
+
     /**
      * Экспорт товаров в csv файл
      */
@@ -26,6 +27,4 @@ class ExportController extends Controller {
             'pagination' => $pagination
         ]);
     }
-
-
 }

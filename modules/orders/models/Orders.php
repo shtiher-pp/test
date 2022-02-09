@@ -74,6 +74,7 @@ class Orders extends ActiveRecord
 
     /**
      * Формирует запрос с учетом условий фильтров
+     * @return Query
      */
     public static function getQuery($param): Query
     {
@@ -138,6 +139,10 @@ class Orders extends ActiveRecord
         }
         return $query;
     }
+
+    /**
+     * @return array
+     */
     public static function getStatuses(): array
     {
         return [
@@ -148,6 +153,10 @@ class Orders extends ActiveRecord
             static::FAIL_STATUS => "Fail",
         ];
     }
+
+    /**
+     * @return array
+     */
     public static function getMode(): array
     {
         return [
@@ -155,6 +164,10 @@ class Orders extends ActiveRecord
             static::AUTO_MODE => "Auto",
         ];
     }
+
+    /**
+     * @return array
+     */
     public static function getSearchType(): array
     {
         return [

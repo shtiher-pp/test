@@ -13,12 +13,12 @@ use Yii;
  */
 class OrdersController extends Controller
 {
+    public const DEFAULT_PAGE_SIZE = 100;
+
     /**
      * Renders the index view for the module
      * @return string
      */
-    public const DEFAULT_PAGE_SIZE = 100;
-
 
     public function actionIndex(): string
 
@@ -43,7 +43,7 @@ class OrdersController extends Controller
         $status = Orders::getStatuses();
         $mode = Orders::getMode();
         $pages = static::getPages($param, $pagination);
-        
+
         Yii::$app->view->params['params'] = [
             'orders' => $orders,
             'pagination' => $pagination,
@@ -56,10 +56,11 @@ class OrdersController extends Controller
         ];
         return $this->render('index');
     }
+
     /**
-     *
      * @return array
      */
+
     public static function getParams(): array
     {
         $param = [];
@@ -82,6 +83,10 @@ class OrdersController extends Controller
         return $param;
     }
 
+    /**
+     * @return array
+     */
+
     public static function getPages($param, $pagination): string
     {
         if ($pagination->totalCount<1){
@@ -101,5 +106,4 @@ class OrdersController extends Controller
         }
         return '';
     }
-
 }

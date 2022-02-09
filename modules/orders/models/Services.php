@@ -17,7 +17,7 @@ class Services extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'services';
     }
@@ -25,7 +25,7 @@ class Services extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name'], 'required'],
@@ -36,7 +36,7 @@ class Services extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -45,8 +45,9 @@ class Services extends ActiveRecord
     }
     /**
      * Возвращает список сервисов с количеством записей в заказах
+     * @return Query
      */
-    public static function getServices()
+    public static function getServices(): Query
     {
         $services=new Query();
         $services->select(['s.id service_id',
