@@ -77,4 +77,20 @@ class SearhOrders extends ActiveRecord
         }
         return $query->orderBy(['id' => SORT_DESC]);
     }
+    /**
+     * Возвращает список сервисов с количеством записей в заказах
+     * @return Query
+     */
+    public static function getServices(): Query
+    {
+        $services=new Query();
+        $services->select(['s.id service_id',
+            's.name service',
+            'COUNT(o.service_id) service_count'])
+            ->from(['services s'])
+            ->innerJoin('orders o', 'o.service_id = s.id')
+            ->groupBy('o.service_id')
+            ->orderBy('service_count desc');
+        return $services;
+    }
 }

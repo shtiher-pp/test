@@ -26,9 +26,9 @@ class OrdersController extends Controller
     {
 //        включить локаль ru
         Yii::$app->language = 'ru';
-        $this->layout = '_layout';
+        $this->layout = '_layout';  
         $param = static::getParams();
-        $services = Services::getServices()->all();
+        $services = SearhOrders::getServices()->all();
         $totalCount = Orders::find()->count();
         $query = SearhOrders::getQuery($param);
         $pagination = new Pagination([
