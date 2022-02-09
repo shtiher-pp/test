@@ -14,14 +14,14 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'modules' => [
-    'test' => [
-        'class' => 'app\modules\test\Module',
+        'orders' => [
+            'class' => 'app\modules\orders\Orders',
+        ],
     ],
-],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'gsIb9gfDhnY8IhTBjzYZB7PxhKrlAdqS',
+            'cookieValidationKey' => 'D3w9tUmZD7snNbxL5bm3rRNL13MsIJWk',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -55,6 +55,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'orders'=>'orders/orders',
 
             ],
         ],

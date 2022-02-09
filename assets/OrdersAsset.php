@@ -17,8 +17,7 @@ use yii\web\AssetBundle;
  */
 class OrdersAsset extends AssetBundle
 {
-    public $sourcePath = '@app/modules/test/views/default';
- //   public $cssOptions = ['condition' => 'lte IE9'];
+    public $sourcePath = '@app/modules/orders/views/orders';
     public $css = [
         'css/bootstrap.custom.css',
         'css/bootstrap.min.css',
