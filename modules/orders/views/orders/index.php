@@ -20,7 +20,6 @@ use yii\helpers\Url;
     'param' => $param,
     'search' => $search,
 ]) ?>
-
 <?= $this->render('../layouts/_order_list', [
     'orders' => $orders,
     'services' => $services,
@@ -29,15 +28,13 @@ use yii\helpers\Url;
     'mode' => $mode,
     'param' => $param,
 ]) ?>
-
 <?= $this->render('../layouts/_pagination', [
     'pagination' => $pagination,
     'pages' => $pages,
 ]) ?>
-
 <div class="export-csv-link">
         <span>
-        <a href="<?=Url::to(['/orders/export']).'?'.http_build_query(array_merge($param))?>"><?=Yii::t('common', Yii::t('common', 'Save result')) ?></a></span>
+        <a href="<?= Url::to(['/orders/export']).'?'.http_build_query(array_merge($param))?>"><?=Yii::t('common', Yii::t('common', 'Save result')) ?></a></span>
 </div>
 </div>
 </div>

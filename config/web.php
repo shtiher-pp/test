@@ -50,13 +50,11 @@ $config = [
             ],
         ],
         'db' => $db,
-
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 'orders'=>'orders/orders',
-
             ],
         ],
         'i18n' => [

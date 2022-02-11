@@ -2,8 +2,6 @@
 
 namespace app\modules\orders\models;
 
-use Yii;
-use yii\db\Query;
 use \yii\db\ActiveRecord;
 
 /**

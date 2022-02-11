@@ -3,7 +3,6 @@
 namespace app\modules\orders\models;
 
 use Yii;
-use yii\db\Query;
 use yii\db\ActiveRecord;
 
 /**
@@ -61,14 +60,14 @@ class Orders extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => 'User ID',
-            'link' => 'Link',
-            'quantity' => 'Quantity',
-            'service_id' => 'Service ID',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'mode' => 'Mode',
+            'id' => Yii::t('common', 'ID'),
+            'user_id' => Yii::t('common', 'User'),
+            'link' => Yii::t('common', 'Link'),
+            'quantity' => Yii::t('common', 'Quantity'),
+            'service_id' => Yii::t('common', 'Service'),
+            'status' => Yii::t('common', 'Status'),
+            'created_at' => Yii::t('common', 'Created'),
+            'mode' => Yii::t('common', 'Mode'),
         ];
     }
 

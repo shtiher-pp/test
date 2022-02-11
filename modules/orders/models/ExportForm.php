@@ -6,16 +6,15 @@ use app\modules\orders\controllers\OrdersController;
 use yii\data\Pagination;
 use yii\db\ActiveRecord;
 
-
 class ExportForm extends ActiveRecord
 {
-
-
-    public static function exportCsv()
+    /**
+     * @return string
+     */
+    public static function exportCsv(): string
     {
-
         $param = OrdersController::getParams();
-        $query = SearhOrders::getQuery($param);
+        $query = OrdersSearch::getQuery($param);
         $pagination = new Pagination([
             'defaultPageSize' =>  OrdersController::DEFAULT_PAGE_SIZE,
             'totalCount' => $query->count(),

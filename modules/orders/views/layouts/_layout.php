@@ -11,13 +11,11 @@
 /** @var $pages array */
 /** @var $param array */
 
-
 use app\assets\OrdersAsset;
 use yii\bootstrap4\Html;
 use yii\helpers\Url;
 
 OrdersAsset::register($this);
-
 ?>
 
 <?php $this->beginPage() ?>
@@ -31,7 +29,6 @@ OrdersAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <title></title>
-
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -58,9 +55,7 @@ OrdersAsset::register($this);
         </div>
     </nav>
 </header>
-
 <?= $content ?>
-
 </body>
 <?php $this->endBody() ?>
 </html>
