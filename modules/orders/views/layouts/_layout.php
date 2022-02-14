@@ -13,7 +13,6 @@
 
 use app\assets\OrdersAsset;
 use yii\bootstrap4\Html;
-use yii\helpers\Url;
 
 OrdersAsset::register($this);
 ?>
@@ -49,7 +48,9 @@ OrdersAsset::register($this);
             </div>
             <div class="collapse navbar-collapse" id="bs-navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="<?=Url::to(['/orders/orders'])?>"><?=Yii::t('common', 'Orders') ?></a></li>
+                    <li class="active">
+                        <?= Html::a(Yii::t('common', 'Orders'), ['/orders']) ?>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -1,68 +1,65 @@
 <?php
 
-use yii\helpers\Url;
+use app\modules\orders\models\models\Orders;
+use yii\grid\GridView;
+use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/** @var $param array */
-/** @var $status array */
-/** @var $services array */
-/** @var $totalCount array */
-/** @var $mode array */
 /** @var $orders array */
+/** @var $servicesMenu array */
+/** @var $modeMenu array */
+/** @var $headers array */
 
 ?>
-<table class="table order-table">
-    <thead>
-    <tr>
-        <th><?= Yii::t('common', 'ID') ?></th>
-        <th><?= Yii::t('common', 'User') ?></th>
-        <th><?= Yii::t('common', 'Link') ?></th>
-        <th><?= Yii::t('common', 'Quantity') ?></th>
-        <th class="dropdown-th">
-            <div class="dropdown">
-                <button class="btn btn-th btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <?= Yii::t('common', 'Service') ?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li class="active"><a href="<?= Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["service"=>'']))?>"><?= Yii::t('common', 'All') ?> (<?= $totalCount ?>)</a></li>
-                    <?php foreach ($services as $service): ?>
-                        <li><a href="<?= Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["service"=>$service['service_id']])) ?>"><span class="label-id"><?=$service['service_count']?></span> <?= Yii::t('common', $service['service'])?></a></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </th>
-        <th><?= Yii::t('common', 'Status') ?></th>
-        <th class="dropdown-th">
-            <div class="dropdown">
-                <button class="btn btn-th btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <?= Yii::t('common', 'Mode') ?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li class="active"><a href="<?=Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>'']))?>"><?= Yii::t('common', 'All') ?></a></li>
-                    <li><a href="<?= Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>0]))?>"><?=$mode[0]?></a></li>
-                    <li><a href="<?= Url::to(['/orders/orders']).'?'.http_build_query(array_merge($param, ["mode"=>1]))?>"><?=$mode[1]?></a></li>
-                </ul>
-            </div>
-        </th>
-        <th><?=Yii::t('common', 'Created') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($orders as $order): ?>
-        <tr>
-            <td><?= $order['id'] ?></td>
-            <td><?= $order['full_name']?></td>
-            <td class="link"><?= $order['link'] ?></td>
-            <td><?= $order['quantity'] ?></td>
-            <td class="service">
-                <span class="label-id"><?=$order['service_id']?></span><?= Yii::t('common', $order['service']) ?>
-            </td>
-            <td><?= $status[$order['status']] ?></td>
-            <td><?= !$order['mode'] ? Yii::t('common', $mode[0]) : Yii::t('common', $mode[1]) ?></td>
-            <td><span class="nowrap"><?= date('Y-m-d',$order['created']) ?></span><span class="nowrap"><?= date('H:i:s',$order['created']) ?></span></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+
+<?= GridView::widget([
+    'dataProvider' => $orders,
+    'layout' => "{items}\n{sorter}\n{summary}\n{pager}",
+    'tableOptions' => [
+        'class' => 'table order-table'
+    ],
+    'columns' => [
+
+        ['attribute' => 'id',
+            'header' => $headers['id'],
+        ],
+        ['attribute' => 'full_name',
+            'header' => $headers['user_id'],
+        ],
+        ['attribute' => 'link',
+            'header' => $headers['link'],
+        ],
+        ['attribute' => 'quantity',
+            'header' => $headers['quantity'],
+        ],
+        ['attribute' => 'service_id',
+            'header' => $this->render('../layouts/_services_menu', [
+                'servicesMenu' => $servicesMenu,
+                'headers' => $headers
+            ]),
+            'content' => function($model) {
+                return Html::tag('span', Html::encode($model['service_id']), ['class' => 'label-id'])  . " " . Yii::t('common', $model['service']) ;},
+        ],
+        ['attribute' => 'status',
+            'header' => $headers['status'],
+            'value' => function ($model, $key, $index, $column){
+                $status = Orders::getStatuses();
+                return $status[$model[$column->attribute]];
+            },
+        ],
+        ['attribute' => 'mode',
+            'header' => $this->render('../layouts/_mode_menu', [
+                'modeMenu' => $modeMenu,
+                'headers' => $headers,
+            ]),
+            'value' => function ($model, $key, $index, $column) {
+                $active = $model[$column->attribute] == 1;
+                return $active ? Yii::t('common', 'orders.auto_mode') : Yii::t('common', 'orders.manual_mode');
+            },
+        ],
+        ['attribute' => 'created',
+            'header' => $headers['created_at'],
+            'format' =>  ['date', 'YYYY-MM-dd HH:mm:ss'],
+            'options' => ['width' => '200']
+        ],
+    ],
+]) ?>

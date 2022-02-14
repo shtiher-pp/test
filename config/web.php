@@ -6,7 +6,7 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'language'=>'en',
-    'sourceLanguage'=> 'en',
+//    'sourceLanguage'=> '',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -19,6 +19,9 @@ $config = [
         ],
     ],
     'components' => [
+        'assetManager' => [
+            'linkAssets' => true,
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'D3w9tUmZD7snNbxL5bm3rRNL13MsIJWk',
@@ -54,7 +57,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'orders'=>'orders/orders',
+                'orders'=>'orders/orders/index',
             ],
         ],
         'i18n' => [

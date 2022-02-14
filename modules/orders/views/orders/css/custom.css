@@ -2964,4 +2964,7 @@ input[type="checkbox"].selectOrder{
   float: right;
 }
 
+.summary {
+  float: right;
+}
 

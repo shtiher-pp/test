@@ -2,7 +2,7 @@
 
 namespace app\modules\orders\controllers;
 
-use app\modules\orders\models\ExportForm;
+use app\modules\orders\models\forms\ExportForm;
 use yii\web\Controller;
 use yii\web\RangeNotSatisfiableHttpException;
 use yii\web\Response;
@@ -15,7 +15,7 @@ class ExportController extends Controller {
      */
     public function actionIndex(): Response
     {
-        $data=ExportForm::exportCsv();
+        $data = ExportForm::exportCsv();
         return \Yii::$app->response->sendContentAsFile($data, 'orders.csv', [
             'mimeType' => 'application/csv',
             'inline'   => false

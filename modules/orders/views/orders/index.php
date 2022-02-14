@@ -1,40 +1,34 @@
 <?php
 
-use yii\helpers\Url;
-
-/* @var $this \yii\web\View */
-/** @var $orders array */
-/** @var $services array */
-/** @var $pagination array */
-/** @var $totalCount string */
-/** @var $status array */
-/** @var $mode array */
-/** @var $pages array */
+/** @var $statuses array */
 /** @var $param array */
 /** @var $search array */
+/** @var $orders array */
+/** @var $servicesMenu array */
+/** @var $modeMenu array */
+/** @var $headers array */
+
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 
-<?= $this->render('../layouts/_filters', [
-    'status' => $status,
-    'param' => $param,
-    'search' => $search,
-]) ?>
-<?= $this->render('../layouts/_order_list', [
-    'orders' => $orders,
-    'services' => $services,
-    'totalCount' => $totalCount,
-    'status' => $status,
-    'mode' => $mode,
-    'param' => $param,
-]) ?>
-<?= $this->render('../layouts/_pagination', [
-    'pagination' => $pagination,
-    'pages' => $pages,
-]) ?>
-<div class="export-csv-link">
+<div class="container-fluid">
+    <?= $this->render('../layouts/_filters', [
+        'statuses' => $statuses,
+        'param' => $param,
+        'search' => $search,
+    ]) ?>
+    <?= $this->render('../layouts/_order_list', [
+        'orders' => $orders,
+        'servicesMenu' => $servicesMenu,
+        'modeMenu' => $modeMenu,
+        'headers' => $headers
+    ]) ?>
+    <div class="export-csv-link">
         <span>
-        <a href="<?= Url::to(['/orders/export']).'?'.http_build_query(array_merge($param))?>"><?=Yii::t('common', Yii::t('common', 'Save result')) ?></a></span>
+            <?= Html::a(Yii::t('common', 'Save result'), Url::to(array_merge(['/orders/export'],$param))) ?>
+        </span>
+    </div>
 </div>
-</div>
-</div>
+</br>
