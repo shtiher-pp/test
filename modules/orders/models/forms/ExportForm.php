@@ -17,7 +17,7 @@ class ExportForm extends ActiveRecord
     {
 //        Yii::$app->language = 'ru';
         $param = OrdersController::getParams();
-        $orders = OrdersSearch::getOrders($param)->getModels();
+        $orders = (new OrdersSearch())->getOrders($param)->getModels();
         $data = implode(';', (new Orders())->attributeLabels()) . "\r\n";
         foreach ($orders as $order) {
             $data .= $order['id'].

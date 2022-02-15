@@ -20,7 +20,7 @@ class OrdersSearch extends ActiveRecord
      * @param array $param
      * @return Query
      */
-    public static function getQuery(array $param): Query
+    public function getQuery(array $param): Query
     {
         $query = new Query();
         $query->select(['o.id id' ,
@@ -39,38 +39,33 @@ class OrdersSearch extends ActiveRecord
             $status = $param['status'];
             $query->where("o.status=:status", [':status' => $status]);
         }
-        if   (isset($param['search'])&&isset($param['search-type'])) {
+        if   (isset($param['search']) && isset($param['search-type'])) {
             $search=$param['search'];
             $searchType=$param['search-type'];
             switch ($searchType) {
                 case Orders::SEARCH_ORDER_ID:
-                    $query->andWhere("o.id=:search",[':search'=>$search]);
+                    $query->andWhere("o.id=:search",[':search' => $search]);
                     break;
                 case Orders::SEARCH_LINK:
-                    $query->andWhere("o.link=:search",[':search'=>$search]);
+                    $query->andWhere("o.link=:search",[':search' => $search]);
                     break;
                 case Orders::SEARCH_USERNAME:
                     if (strpos($search, ', ')) {
-                        $firstName=explode(',', $search)[0];
-                        $lastName=explode(', ', $search)[1];
-                    }
-                    else {
-                        $firstName=0;
-                        $lastName=0;
+                        $userName = explode(', ', $search);
                     }
                     $query
-                        ->andWhere("u.first_name=:firstName", [':firstName' => $firstName])
-                        ->andWhere("u.last_name=:lastName",[':lastName'=>$lastName]);
+                        ->andWhere("u.first_name=:firstName", [':firstName' => isset($userName[0]) ? $userName[0] : ''])
+                        ->andWhere("u.last_name=:lastName", [':lastName' => isset($userName[1]) ? $userName[1] : '']);
                     break;
             }
         }
         if (isset($param['mode'])) {
             $mode=$param['mode'];
-            $query->andWhere("o.mode=:mode",[':mode'=>$mode]);
+            $query->andWhere("o.mode=:mode",[':mode' => $mode]);
         }
         if (isset($param['service'])) {
             $service = $param['service'];
-            $query->andWhere("o.service_id=:service",[':service'=>$service]);
+            $query->andWhere("o.service_id=:service",[':service' => $service]);
         }
         return $query->orderBy(['id' => SORT_DESC]);
     }
@@ -79,10 +74,10 @@ class OrdersSearch extends ActiveRecord
      * @param array $param
      * @return ActiveDataProvider
      */
-    public static function getOrders(array $param): ActiveDataProvider
+    public function getOrders(array $param): ActiveDataProvider
     {
         return new ActiveDataProvider([
-            'query' => OrdersSearch::getQuery($param),
+            'query' => (new OrdersSearch())->getQuery($param),
             'pagination' => [
                 'pageSize' => OrdersSearch::DEFAULT_PAGE_SIZE,
             ],
@@ -93,9 +88,9 @@ class OrdersSearch extends ActiveRecord
      * Возвращает список сервисов с количеством записей в заказах
      * @return array
      */
-    public static function getServices(): array
+    public function getServices(): array
     {
-        $services=new Query();
+        $services = new Query();
         $services->select(['s.id service_id',
             's.name service',
             'COUNT(o.service_id) service_count'])
@@ -110,14 +105,16 @@ class OrdersSearch extends ActiveRecord
      * Формирует массив для выпадающено списка services
      * @return array
      */
-    public static function getServicesMenu(): array
+    public function getServicesMenu(): array
     {
-        $services = static::getServices();
-        $serviceMenu = [['label' => Yii::t('common', 'All') . ' (' . Orders::find()->count() . ')', 'url' => [Url::current(["service" => static::ALL_SERVICES_MENU])]]];
+        $services = (new OrdersSearch())->getServices();
+        $serviceMenu = [['label' => Yii::t('common', 'All') . ' (' . Orders::find()->count() . ')',
+            'url' => [Url::current(["service" => static::ALL_SERVICES_MENU])]
+        ]];
         foreach ($services as $service) {
             $serviceMenu[] = [
-                'label' => Html::tag('span', Html::encode($service['service_count']), ['class' => 'label-id']
-                    ) . Yii::t('common', $service['service']),
+                'label' => Html::tag('span', Html::encode($service['service_count']), ['class' => 'label-id'])
+                    . Yii::t('common', $service['service']),
                 'url' => [Url::current(["service" => $service['service_id']])],
             ];
         }

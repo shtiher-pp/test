@@ -24,11 +24,11 @@ class OrdersController extends Controller
 //        Yii::$app->language = 'ru';
         $this->layout = '_layout';
         $param = static::getParams();
-        $servicesMenu = OrdersSearch::getServicesMenu();
+        $servicesMenu = (new OrdersSearch())->getServicesMenu();
         $statuses = Orders::getStatuses();
         $modeMenu = Orders::getModeMenu();
         $search = Orders::getSearchType();
-        $orders = OrdersSearch::getOrders($param);
+        $orders = (new OrdersSearch())->getOrders($param);
         $headers = (new Orders())->attributeLabels();
         return $this->render('index', [
             'orders' => $orders,

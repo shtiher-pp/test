@@ -11,11 +11,11 @@ use yii\widgets\ActiveForm;
 ?>
 
 <ul class="nav nav-tabs p-b">
-    <li <?= !isset($param['status'])? 'class="active"' : '' ?>>
+    <li <?= !isset($param['status']) ? 'class="active"' : '' ?>>
         <?= Html::a(Yii::t('common', 'All orders'), ['/orders']) ?>
     </li>
-    <?php foreach ($statuses as $status_id=>$status): ?>
-        <li <?= isset($param['status']) ? ($param['status'] ==  $status_id ? 'class="active"':'' ): '' ?> >
+    <?php foreach ($statuses as $status_id => $status) : ?>
+        <li <?= isset($param['status']) ? ($param['status'] ==  $status_id ? 'class="active"' : '' ) : '' ?> >
             <?= Html::a($status, ['/orders', 'status' => $status_id]) ?>
         </li>
     <?php endforeach; ?>
@@ -28,8 +28,14 @@ use yii\widgets\ActiveForm;
             ],
         ]) ?>
         <div class="input-group">
-            <?= isset($param['status']) ? Html::tag('input', '', ['type' => 'hidden', 'name' => 'status', 'value' => $param['status']]) : ''  ?>
-            <?=Html::tag('input','',['type' => 'text', 'name' => 'search', 'class' => 'form-control', 'placeholder' =>  Yii::t('common', 'Search orders')])?>
+            <?= isset($param['status'])
+                ? Html::tag('input', '', ['type' => 'hidden', 'name' => 'status', 'value' => $param['status']])
+                : ''  ?>
+            <?=Html::tag('input','',['type' => 'text',
+                'name' => 'search',
+                'class' => 'form-control',
+                'placeholder' =>  Yii::t('common', 'Search orders')
+            ])?>
             <span class="input-group-btn search-select-wrap">
             <?= Html::dropDownList('search-type', 1, $search, ['class' => 'form-control search-select']) ?>
             <button type="submit" class="btn btn-default">
