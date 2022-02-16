@@ -4,7 +4,6 @@ namespace app\modules\orders\models\models;
 
 use Yii;
 use yii\db\ActiveRecord;
-use yii\helpers\Url;
 
 /**
  * This is the model class for table "orders".
@@ -29,7 +28,6 @@ class Orders extends ActiveRecord
 
     public const MANUAL_MODE = 0;
     public const AUTO_MODE = 1;
-    public const ALL_MODE = null;
 
     public const SEARCH_ORDER_ID = 1;
     public const SEARCH_LINK = 2;
@@ -92,22 +90,9 @@ class Orders extends ActiveRecord
     public static function getMode(): array
     {
         return [
-            static::ALL_MODE => Yii::t('common', 'orders.all_mode'),
             static::MANUAL_MODE => Yii::t('common', 'orders.manual_mode'),
             static::AUTO_MODE => Yii::t('common', 'orders.auto_mode'),
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getModeMenu(): array
-    {
-        $modeMenu = [];
-        foreach (static::getMode() as $key => $value) {
-            $modeMenu[] = ['label' => $value, 'url' => [Url::current(["mode" => $key])]];
-        }
-        return $modeMenu;
     }
 
     /**

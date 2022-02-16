@@ -4,32 +4,44 @@ namespace app\modules\orders\models\forms;
 
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\searches\OrdersSearch;
-use Yii;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
-use app\modules\orders\controllers\OrdersController;
 
 class ExportForm extends ActiveRecord
 {
+
     /**
-     * @return string
+     * @throws InvalidConfigException
      */
-    public static function exportCsv(): string
+    public static function exportCsv()
     {
-//        Yii::$app->language = 'ru';
-        $param = OrdersController::getParams();
+        $text = implode(';', (new Orders())->attributeLabels()) . "\r\n";
+        $filename = __DIR__ . '/orders.csv';
+        $param = OrdersSearch::getParams();
         $orders = (new OrdersSearch())->getOrders($param)->getModels();
-        $data = implode(';', (new Orders())->attributeLabels()) . "\r\n";
+        $fh = fopen($filename, 'w');
+        fwrite($fh, $text);
         foreach ($orders as $order) {
-            $data .= $order['id'].
+            fwrite($fh, $order['id'].
                 ';' . $order['full_name'] .
                 ';' . $order['link'] .
                 ';' . $order['quantity'] .
-                ';' . Yii::t('common', $order['service']) .
-                ';' . Orders::getStatuses()[$order['status']] .
-                ';' . Orders::getMode()[$order['mode']] .
-                ';' . date('Y-m-d H:i:s',$order['created']) .
-                "\r\n";
+                ';' . $order['service'] .
+                ';' . $order['status'] .
+                ';' . $order['mode'] .
+                ';' . $order['created'] .
+                "\r\n");
         }
-        return $data;
+        fclose($fh);
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filename));
+        readfile($filename);
+        exit;
     }
 }

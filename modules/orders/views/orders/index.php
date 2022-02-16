@@ -4,8 +4,6 @@
 /** @var $param array */
 /** @var $search array */
 /** @var $orders array */
-/** @var $servicesMenu array */
-/** @var $modeMenu array */
 /** @var $headers array */
 
 use yii\helpers\Html;
@@ -13,6 +11,13 @@ use yii\helpers\Url;
 
 ?>
 
+<?php if (isset($param['error'])): ?>
+    <div class="alert alert-danger" role="alert">
+        <?php foreach ($param['error'] as $key => $error): ?>
+            <p><?= $key.': '.$error[0]?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
 <div class="container-fluid">
     <?= $this->render('../layouts/_filters', [
         'statuses' => $statuses,
@@ -21,8 +26,6 @@ use yii\helpers\Url;
     ]) ?>
     <?= $this->render('../layouts/_order_list', [
         'orders' => $orders,
-        'servicesMenu' => $servicesMenu,
-        'modeMenu' => $modeMenu,
         'headers' => $headers
     ]) ?>
     <div class="export-csv-link">

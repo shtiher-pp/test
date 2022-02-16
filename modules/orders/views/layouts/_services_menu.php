@@ -1,8 +1,7 @@
 <?php
 
-use yii\widgets\Menu;
+use app\modules\orders\widgets\ModeMenu;
 
-/** @var $servicesMenu array */
 /** @var $headers array */
 
 ?>
@@ -11,13 +10,5 @@ use yii\widgets\Menu;
         <?= $headers['service_id'] ?>
         <span class="caret"></span>
     </button>
-    <?= Menu::widget([
-        'items' => $servicesMenu,
-        'encodeLabels' => false,
-        'firstItemCssClass' => 'active',
-        'options' => [
-            'aria-labelledby' => 'dropdownMenu1',
-            'class' => 'dropdown-menu',
-        ],
-    ]) ?>
+    <?= ModeMenu::widget(['items' => 'serviceMenu'])?>
 </div>

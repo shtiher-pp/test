@@ -9,16 +9,8 @@ use yii\web\Response;
 
 class ExportController extends Controller {
 
-    /**
-     * Экспорт товаров в csv файл
-     * @throws RangeNotSatisfiableHttpException
-     */
-    public function actionIndex(): Response
+    public function actionIndex()
     {
-        $data = ExportForm::exportCsv();
-        return \Yii::$app->response->sendContentAsFile($data, 'orders.csv', [
-            'mimeType' => 'application/csv',
-            'inline'   => false
-        ]);
+        return ExportForm::exportCsv();
     }
 }

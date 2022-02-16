@@ -16,7 +16,7 @@ services:
       - PHP_ENABLE_XDEBUG=1
       - PHP_IDE_CONFIG=serverName=MyTestServer
     ports:
-      - '80:80'
+      - ${PORTS}
     networks:
       - default
     depends_on:
@@ -26,12 +26,12 @@ services:
     restart: always
     platform: 'linux/amd64'
     environment:
-      - MYSQL_DATABASE=orders_db
-      - MYSQL_ROOT_PASSWORD=my_root_pwd
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - '3306:3306'
+      - ${PORTS_DB}
     expose:
-      - '3306'
+      - ${PORTS_DB_EXPOSE}
     volumes:
       - "./docker/mysql:/var/lib/mysql"
     networks:
