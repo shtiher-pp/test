@@ -4,7 +4,6 @@ namespace app\modules\orders\models\searches;
 
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\models\Services;
-use Yii;
 use yii\base\DynamicModel;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
@@ -81,8 +80,8 @@ class OrdersSearch extends ActiveRecord
                     if (strpos($search, ', ')) {
                         $userName = explode(', ', $search);
                         $query
-                            ->andWhere(['like', 'u.first_name', $userName[0] ?? $search])
-                            ->andWhere(['like', 'u.last_name', $userName[1] ??  $search]);
+                            ->andWhere(['like', 'u.first_name', $userName[0]])
+                            ->andWhere(['like', 'u.last_name', $userName[1]]);
                         break;
                     }
                     $query
@@ -109,7 +108,9 @@ class OrdersSearch extends ActiveRecord
     public function getOrders(array $param): ActiveDataProvider
     {
         return new ActiveDataProvider([
-            'query' => (new OrdersSearch())->getQuery($param, (new OrdersSearch())->getOrdersQuery())->orderBy(['id' => SORT_DESC]),
+            'query' => (new OrdersSearch())
+                ->getQuery($param, (new OrdersSearch())->getOrdersQuery())
+                ->orderBy(['id' => SORT_DESC]),
             'pagination' => [
                 'pageSize' => OrdersSearch::DEFAULT_PAGE_SIZE,
             ],
@@ -123,7 +124,8 @@ class OrdersSearch extends ActiveRecord
      */
     public function getServices($param): Query
     {
-        return (new OrdersSearch())->getQuery($param, (new OrdersSearch())->getServicesQuery())
+        return (new OrdersSearch())
+            ->getQuery($param, (new OrdersSearch())->getServicesQuery())
             ->groupBy('o.service_id')
             ->orderBy('service_count desc');
     }

@@ -2,14 +2,6 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-/** @var $orders array */
-/** @var $services array */
-/** @var $pagination array */
-/** @var $totalCount string */
-/** @var $status array */
-/** @var $mode array */
-/** @var $pages array */
-/** @var $param array */
 
 use app\assets\OrdersAsset;
 use yii\bootstrap4\Html;

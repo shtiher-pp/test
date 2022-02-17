@@ -23,9 +23,7 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin([
             'method' => 'get',
             'action' => ['/orders'],
-            'options' => [
-                'class' => 'form-inline'
-            ],
+            'options' => ['class' => 'form-inline'],
         ]) ?>
         <div class="input-group">
             <?= isset($param['status'])
@@ -35,7 +33,7 @@ use yii\widgets\ActiveForm;
                 'name' => 'search',
                 'class' => 'form-control',
                 'placeholder' =>  Yii::t('common', 'Search orders')
-            ])?>
+            ]) ?>
             <span class="input-group-btn search-select-wrap">
             <?= Html::dropDownList('search-type', 1, $search, ['class' => 'form-control search-select']) ?>
             <button type="submit" class="btn btn-default">

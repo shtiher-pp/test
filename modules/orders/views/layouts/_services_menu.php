@@ -10,5 +10,5 @@ use app\modules\orders\widgets\ModeMenu;
         <?= $headers['service_id'] ?>
         <span class="caret"></span>
     </button>
-    <?= ModeMenu::widget(['items' => 'serviceMenu'])?>
+    <?= ModeMenu::widget(['items' => 'serviceMenu']) ?>
 </div>

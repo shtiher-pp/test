@@ -14,7 +14,7 @@ use yii\helpers\Url;
 <?php if (isset($param['error'])): ?>
     <div class="alert alert-danger" role="alert">
         <?php foreach ($param['error'] as $key => $error): ?>
-            <p><?= $key.': '.$error[0]?></p>
+            <p><?= $key.': '.$error[0] ?></p>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
@@ -26,11 +26,11 @@ use yii\helpers\Url;
     ]) ?>
     <?= $this->render('../layouts/_order_list', [
         'orders' => $orders,
-        'headers' => $headers
+        'headers' => $headers,
     ]) ?>
     <div class="export-csv-link">
         <span>
-            <?= Html::a(Yii::t('common', 'Save result'), Url::to(array_merge(['/orders/export'],$param))) ?>
+            <?= Html::a(Yii::t('common', 'Save result'), Url::to(array_merge(['/orders/export'], $param))) ?>
         </span>
     </div>
 </div>

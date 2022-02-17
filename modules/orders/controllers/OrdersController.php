@@ -4,7 +4,6 @@ namespace app\modules\orders\controllers;
 
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\searches\OrdersSearch;
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\web\Controller;
 
@@ -13,7 +12,6 @@ use yii\web\Controller;
  */
 class OrdersController extends Controller
 {
-
     /**
      * Renders the index view for the module
      * @return string
@@ -21,7 +19,6 @@ class OrdersController extends Controller
      */
     public function actionIndex(): string
     {
-        Yii::$app->language = 'ru';
         $param = OrdersSearch::getParams();
         $statuses = Orders::getStatuses();
         $search = Orders::getSearchType();
@@ -35,5 +32,4 @@ class OrdersController extends Controller
             'headers' => $headers,
         ]);
     }
-
 }

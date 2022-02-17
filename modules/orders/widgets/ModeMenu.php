@@ -2,16 +2,17 @@
 
 namespace app\modules\orders\widgets;
 
-use app\modules\orders\controllers\OrdersController;
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\searches\OrdersSearch;
 use Exception;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\base\Widget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Menu;
 
-class ModeMenu extends \yii\base\Widget
+class ModeMenu extends Widget
 {
     public string $items;
     public array $menu;
@@ -19,6 +20,9 @@ class ModeMenu extends \yii\base\Widget
     public const MODE_MENU = 'modeMenu';
     public const SERVICE_MENU = 'serviceMenu';
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function init() {
         parent::init();
         if ($this->items == static::MODE_MENU) {

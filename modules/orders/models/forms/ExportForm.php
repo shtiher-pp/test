@@ -9,14 +9,13 @@ use yii\db\ActiveRecord;
 
 class ExportForm extends ActiveRecord
 {
-
     /**
      * @throws InvalidConfigException
      */
     public static function exportCsv()
     {
         $text = implode(';', (new Orders())->attributeLabels()) . "\r\n";
-        $filename = __DIR__ . '/orders.csv';
+        $filename = '/app/output/orders.csv';
         $param = OrdersSearch::getParams();
         $orders = (new OrdersSearch())->getOrders($param)->getModels();
         $fh = fopen($filename, 'w');
