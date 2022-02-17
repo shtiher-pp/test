@@ -47,7 +47,7 @@ class OrdersSearch extends ActiveRecord
         $services = new Query();
         $services->select(['s.id service_id',
             's.name service',
-            'COUNT(o.service_id) service_count'])
+            'count(o.service_id) service_count'])
             ->from(['services s'])
             ->innerJoin('orders o', 'o.service_id = s.id')
             ->innerJoin('users u', 'u.id = o.user_id ');

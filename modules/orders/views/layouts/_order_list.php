@@ -1,5 +1,6 @@
 <?php
 
+use app\modules\orders\widgets\ModeMenu;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
@@ -29,10 +30,8 @@ use yii\helpers\Html;
             'header' => $headers['quantity'],
         ],
         ['attribute' => 'service_id',
-            'header' => $this->render('../layouts/_services_menu', [
-
-                'headers' => $headers
-            ]),
+            'header' => ModeMenu::widget(['items' => 'serviceMenu',
+                'headers' => $headers['service_id']]),
             'content' => function($model) {
                 return Html::tag('span', Html::encode($model['service_id']), ['class' => 'label-id'])  . " " . $model['service'] ;},
         ],
@@ -41,9 +40,8 @@ use yii\helpers\Html;
 
         ],
         ['attribute' => 'mode',
-            'header' => $this->render('../layouts/_mode_menu', [
-                'headers' => $headers,
-            ]),
+            'header' => ModeMenu::widget(['items' => 'modeMenu',
+                'headers' => $headers['mode']]),
 
         ],
         ['attribute' => 'created',

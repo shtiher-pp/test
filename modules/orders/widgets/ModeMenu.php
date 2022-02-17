@@ -15,7 +15,8 @@ use yii\widgets\Menu;
 class ModeMenu extends Widget
 {
     public string $items;
-    public array $menu;
+    public string $headers;
+    private array $menu;
 
     public const MODE_MENU = 'modeMenu';
     public const SERVICE_MENU = 'serviceMenu';
@@ -39,7 +40,8 @@ class ModeMenu extends Widget
      */
     public function run(): string
     {
-        return Menu::widget([
+
+        $menu = Menu::widget([
             'items' => $this->menu,
             'encodeLabels' => false,
             'firstItemCssClass' => 'active',
@@ -48,6 +50,17 @@ class ModeMenu extends Widget
                 'class' => 'dropdown-menu',
             ],
         ]);
+        $buttonContent = $this->headers . Html::tag('span', '', ['class' => 'caret']);
+        $button = Html::button($buttonContent, [
+            'class' => 'btn btn-th btn-default dropdown-toggle',
+            'type' => "button",
+            'id' =>"dropdownMenu1",
+            'data-toggle' =>"dropdown",
+            'aria-haspopup' =>"true",
+            'aria-expanded' =>"true"
+        ]);
+        $content = $menu . $button;
+        return Html::tag('div', $content, ['class' => 'dropdown']);
     }
 
     /**

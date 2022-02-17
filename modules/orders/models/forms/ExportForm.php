@@ -14,12 +14,12 @@ class ExportForm extends ActiveRecord
      */
     public static function exportCsv()
     {
-        $text = implode(';', (new Orders())->attributeLabels()) . "\r\n";
+        $headers = implode(';', (new Orders())->attributeLabels()) . "\r\n";
         $filename = '/app/output/orders.csv';
         $param = OrdersSearch::getParams();
         $orders = (new OrdersSearch())->getOrders($param)->getModels();
         $fh = fopen($filename, 'w');
-        fwrite($fh, $text);
+        fwrite($fh, $headers);
         foreach ($orders as $order) {
             fwrite($fh, $order['id'].
                 ';' . $order['full_name'] .
