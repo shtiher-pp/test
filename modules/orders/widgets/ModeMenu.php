@@ -89,7 +89,7 @@ class ModeMenu extends Widget
         ]];
         foreach ($services as $service) {
             $serviceMenu[] = [
-                'label' => Html::tag('span', Html::encode($service['service_count']), ['class' => 'label-id'])  . $service['service'],
+                'label' => Html::tag('span', Html::encode($service['service_count']), ['class' => 'label-id']) . $service['service'],
                 'url' => [Url::current(["service" => $service['service_id']])],
             ];
         }
