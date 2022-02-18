@@ -125,8 +125,8 @@ class Orders extends ActiveRecord
         ];
         $params = array_merge($paramsNull, Yii::$app->request->get());
         $model = DynamicModel::validateData($params, [
-            ['search', 'string', 'max' => 300, 'min' => 3],
-            [array_merge(['status', 'mode', 'service', 'page', 'search-type'], [Yii::$app->request->get('search-type') == static::SEARCH_ORDER_ID ? 'search' : 'search-type']), 'number'],
+            Yii::$app->request->get('search-type') == static::SEARCH_ORDER_ID ? [['search'], 'number'] : ['search', 'string', 'max' => 300, 'min' => 3],
+            [['status', 'mode', 'service', 'page', 'search-type'], 'number'],
             ['status', 'in', 'range' => range(0, count(Orders::getStatuses())-1)],
             ['mode', 'in', 'range' => range(static::MANUAL_MODE, static::AUTO_MODE)],
             ['service', 'in', 'range' => range(1, Services::find()->count())],
