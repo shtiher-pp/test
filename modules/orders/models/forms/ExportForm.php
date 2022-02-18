@@ -10,18 +10,17 @@ use yii\db\ActiveRecord;
 class ExportForm extends ActiveRecord
 {
     /**
+     * @return string
      * @throws InvalidConfigException
      */
-    public static function exportCsv()
+    public static function exportCsv(): string
     {
-        $headers = implode(';', (new Orders())->attributeLabels()) . "\r\n";
-        $filename = '/app/output/orders.csv';
-        $param = OrdersSearch::getParams();
-        $orders = (new OrdersSearch())->getOrders($param)->getModels();
-        $fh = fopen($filename, 'w');
-        fwrite($fh, $headers);
+        $param = Orders::getParams();
+        $orders  = (new OrdersSearch())->getQuery($param, (new OrdersSearch())->getOrdersQuery())
+            ->orderBy(['id' => SORT_DESC])->each();
+        $data = implode(';', (new Orders())->attributeLabels()) . "\r\n";
         foreach ($orders as $order) {
-            fwrite($fh, $order['id'].
+            $data .= $order['id'].
                 ';' . $order['full_name'] .
                 ';' . $order['link'] .
                 ';' . $order['quantity'] .
@@ -29,18 +28,8 @@ class ExportForm extends ActiveRecord
                 ';' . $order['status'] .
                 ';' . $order['mode'] .
                 ';' . $order['created'] .
-                "\r\n");
+                "\r\n";
         }
-        fclose($fh);
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . basename($filename));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($filename));
-        readfile($filename);
-        exit;
+        return $data;
     }
 }

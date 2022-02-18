@@ -3,10 +3,7 @@
 namespace app\modules\orders\models\searches;
 
 use app\modules\orders\models\models\Orders;
-use app\modules\orders\models\models\Services;
-use yii\base\DynamicModel;
-use yii\base\InvalidConfigException;
-use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\db\ActiveRecord;
 
@@ -20,8 +17,6 @@ class OrdersSearch extends ActiveRecord
      */
     public function getOrdersQuery(): Query
     {
-        $mode = Orders::getMode();
-        $status = Orders::getStatuses();
         $query = new Query();
         $query->select(['o.id id' ,
             'concat(u.first_name, ", ", u.last_name) full_name',
@@ -30,8 +25,7 @@ class OrdersSearch extends ActiveRecord
             's.name service',
             'o.service_id service_id',
             'o.status status',
-            "case `o`.`status` when 0 then '$status[0]' when 1 then '$status[1]' when 2 then '$status[2]' when 3 then '$status[3]' when 4 then '$status[4]' end as status",
-            "case `o`.`mode` when 0 then '$mode[0]' when 1 then '$mode[1]' end as mode",
+            'o.mode mode',
             'date_format(from_unixtime(`o`.`created_at`), "%Y-%m-%d %H:%i:%s") as `created`',])
             ->from(['orders o'])
             ->innerJoin('services s', 's.id = o.service_id')
@@ -64,21 +58,21 @@ class OrdersSearch extends ActiveRecord
     {
         if (isset($param['status'])) {
             $status = $param['status'];
-            $query->where("o.status=:status", [':status' => $status]);
+            $query->where("o.status = $status");
         }
         if   (isset($param['search']) && isset($param['search-type'])) {
             $search=$param['search'];
             $searchType=$param['search-type'];
             switch ($searchType) {
                 case Orders::SEARCH_ORDER_ID:
-                    $query->andWhere("o.id=:search",[':search' => $search]);
+                    $query->andWhere("o.id = $search");
                     break;
                 case Orders::SEARCH_LINK:
                     $query->andWhere(['like', 'o.link', $search]);
                     break;
                 case Orders::SEARCH_USERNAME:
-                    if (strpos($search, ', ')) {
-                        $userName = explode(', ', $search);
+                    if (strpos($search, ',')) {
+                        $userName = explode(',', $search);
                         $query
                             ->andWhere(['like', 'u.first_name', $userName[0]])
                             ->andWhere(['like', 'u.last_name', $userName[1]]);
@@ -92,25 +86,43 @@ class OrdersSearch extends ActiveRecord
         }
         if (isset($param['mode'])) {
             $mode=$param['mode'];
-            $query->andWhere("o.mode=:mode",[':mode' => $mode]);
+            $query->andWhere("o.mode = $mode");
         }
         if (isset($param['service'])) {
             $service = $param['service'];
-            $query->andWhere("o.service_id=:service",[':service' => $service]);
+            $query->andWhere("o.service_id = $service");
         }
         return $query;
     }
 
     /**
      * @param array $param
-     * @return ActiveDataProvider
+     * @return ArrayDataProvider
      */
-    public function getOrders(array $param): ActiveDataProvider
+    public function getOrders(array $param): ArrayDataProvider
     {
-        return new ActiveDataProvider([
-            'query' => (new OrdersSearch())
-                ->getQuery($param, (new OrdersSearch())->getOrdersQuery())
-                ->orderBy(['id' => SORT_DESC]),
+        $orders = $this
+            ->getQuery($param, $this->getOrdersQuery())
+            ->orderBy(['id' => SORT_DESC]);
+        ini_set('memory_limit', 170000000);
+        $statuses = Orders::getStatuses();
+        $modes = Orders::getMode();
+        $data = [];
+        $dataArray = [];
+        foreach ($orders->each() as $order) {
+            $data['id'] = $order['id'];
+            $data['full_name'] = $order['full_name'];
+            $data['link'] = $order['link'];
+            $data['quantity'] = $order['quantity'];
+            $data['service'] = $order['service'];
+            $data['service_id'] = $order['service_id'];
+            $data['status'] = $statuses[$order['status']];
+            $data['mode'] = $modes[$order['mode']];
+            $data['created'] = $order['created'];
+            $dataArray[] = $data;
+        }
+        return new ArrayDataProvider([
+            'allModels' => $dataArray,
             'pagination' => [
                 'pageSize' => OrdersSearch::DEFAULT_PAGE_SIZE,
             ],
@@ -125,38 +137,8 @@ class OrdersSearch extends ActiveRecord
     public function getServices($param): Query
     {
         return (new OrdersSearch())
-            ->getQuery($param, (new OrdersSearch())->getServicesQuery())
+            ->getQuery($param, $this->getServicesQuery())
             ->groupBy('o.service_id')
             ->orderBy('service_count desc');
-    }
-
-    /**
-     * @return array
-     * @throws InvalidConfigException
-     */
-    public static function getParams(): array
-    {
-        $paramsNull = [
-            'status' => null,
-            'mode' => null,
-            'service' => null,
-            'page' => null,
-            'search-type' => null,
-            'search' => null
-        ];
-        $params = array_merge($paramsNull, $_GET);
-        $model = DynamicModel::validateData($params, [
-            ['search', 'string', 'max' => 300, 'min' => 3],
-            [['status', 'mode', 'service', 'page', 'search-type'], 'number'],
-            ['status', 'in', 'range' => range(0, count(Orders::getStatuses())-1)],
-            ['mode', 'in', 'range' => range(0, 1)],
-            ['service', 'in', 'range' => range(1, Services::find()->count())],
-            ['search-type', 'in', 'range' => range(1, count(Orders::getSearchType()))],
-        ]);
-        if ($model->hasErrors()) {
-            return array_merge($paramsNull, ['error' => $model->errors]);
-        } else {
-            return $params;
-        }
     }
 }

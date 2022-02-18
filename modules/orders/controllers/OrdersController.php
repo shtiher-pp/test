@@ -19,7 +19,7 @@ class OrdersController extends Controller
      */
     public function actionIndex(): string
     {
-        $param = OrdersSearch::getParams();
+        $param = Orders::getParams();
         $statuses = Orders::getStatuses();
         $search = Orders::getSearchType();
         $orders = (new OrdersSearch())->getOrders($param);

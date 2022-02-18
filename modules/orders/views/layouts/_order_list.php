@@ -16,7 +16,6 @@ use yii\helpers\Html;
         'class' => 'table order-table'
     ],
     'columns' => [
-
         ['attribute' => 'id',
             'header' => $headers['id'],
         ],
@@ -37,12 +36,10 @@ use yii\helpers\Html;
         ],
         ['attribute' => 'status',
             'header' => $headers['status'],
-
         ],
         ['attribute' => 'mode',
             'header' => ModeMenu::widget(['items' => 'modeMenu',
                 'headers' => $headers['mode']]),
-
         ],
         ['attribute' => 'created',
             'header' => $headers['created_at'],

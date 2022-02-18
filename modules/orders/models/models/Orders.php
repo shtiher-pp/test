@@ -3,6 +3,8 @@
 namespace app\modules\orders\models\models;
 
 use Yii;
+use yii\base\DynamicModel;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 
 /**
@@ -105,5 +107,38 @@ class Orders extends ActiveRecord
             static::SEARCH_LINK => Yii::t('common', 'orders.search_link'),
             static::SEARCH_USERNAME => Yii::t('common', 'orders.search_username'),
         ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     */
+    public static function getParams(): array
+    {
+        $paramsNull = [
+            'status' => null,
+            'mode' => null,
+            'service' => null,
+            'page' => null,
+            'search-type' => null,
+            'search' => null
+        ];
+        $params = array_merge($paramsNull, Yii::$app->request->get());
+        $model = DynamicModel::validateData($params, [
+            ['search', 'string', 'max' => 300, 'min' => 3],
+            [['status', 'mode', 'service', 'page', 'search-type'], 'number'],
+            ['status', 'in', 'range' => range(0, count(Orders::getStatuses())-1)],
+            ['mode', 'in', 'range' => range(static::MANUAL_MODE, static::AUTO_MODE)],
+            ['service', 'in', 'range' => range(1, Services::find()->count())],
+            ['search-type', 'in', 'range' => range(1, count(Orders::getSearchType()))],
+            ['search', 'filter', 'filter' => function($value){
+                return trim( str_replace(' ', '', $value), " \n\r\t\v\x00");
+            }],
+        ]);
+        if ($model->hasErrors()) {
+            return array_merge($paramsNull, ['error' => $model->errors]);
+        } else {
+            return $model->attributes;
+        }
     }
 }

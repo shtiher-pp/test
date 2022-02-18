@@ -30,7 +30,7 @@ class ModeMenu extends Widget
             $this->menu = static::getModeMenu();
         }
         if ($this->items == static::SERVICE_MENU) {
-            $this->menu = static::getServicesMenu(OrdersSearch::getParams());
+            $this->menu = static::getServicesMenu(Orders::getParams());
         }
     }
 
