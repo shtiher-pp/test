@@ -2,12 +2,14 @@
 
 use app\modules\orders\widgets\ModeFilter;
 use app\modules\orders\widgets\ServiceFilter;
+use yii\db\Query;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
 /** @var $orders array */
 /** @var $headers array */
 /** @var $param array */
+/** @var $services Query */
 
 ?>
 
@@ -34,6 +36,7 @@ use yii\helpers\Html;
             'header' => ServiceFilter::widget(['items' => 'menu',
                 'headers' => $headers['service_id'],
                 'param' => $param,
+                'services' => $services,
             ]),
             'content' => function($model) {
                 return Html::tag('span', Html::encode($model['service_id']), ['class' => 'label-id'])  . " " . $model['service'] ;},

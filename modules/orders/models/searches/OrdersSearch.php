@@ -187,8 +187,7 @@ class OrdersSearch extends Model
      */
     public function getServices($param): Query
     {
-        return (new OrdersSearch())
-            ->getQuery($param, $this->getServicesQuery())
+        return $this->getQuery($param, $this->getServicesQuery())
             ->groupBy('o.service_id')
             ->orderBy('service_count desc');
     }

@@ -5,19 +5,21 @@ namespace app\modules\orders\widgets;
 use app\modules\orders\models\searches\OrdersSearch;
 use app\modules\orders\widgets\CustomFilter;
 use Yii;
+use yii\db\Query;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 class ServiceFilter extends CustomFilter
 {
+    public Query $services;
+
     /**
      * @return array
      */
     public function getMenu(): array
     {
-        $query = (new OrdersSearch())->getServices($this->param);
-        $services = $query->all();
-        $count = $query->sum('service_count');
+        $services = $this->services->all();
+        $count = $this->services->sum('service_count');
         $serviceMenu = [['label' => Yii::t('common', 'All') . ' (' . $count . ')',
             'url' => [Url::current(["service" => OrdersSearch::ALL_SERVICES_MENU])]
         ]];

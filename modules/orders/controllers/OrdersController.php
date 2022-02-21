@@ -22,6 +22,7 @@ class OrdersController extends Controller
         $orderSearch->setParams(Yii::$app->request->get());
         $param = $orderSearch->getParams();
         $statuses = Orders::getStatuses();
+        $services = $orderSearch->getServices($param);
         $search = Orders::getSearchType();
         $orders = $orderSearch->getOrders($param);
         $headers = (new Orders())->attributeLabels();
@@ -31,6 +32,7 @@ class OrdersController extends Controller
             'search'=> $search,
             'param' => $param,
             'headers' => $headers,
+            'services' => $services,
         ]);
     }
 }

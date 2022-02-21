@@ -5,7 +5,9 @@
 /** @var $search array */
 /** @var $orders array */
 /** @var $headers array */
+/** @var $services Query */
 
+use yii\db\Query;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -28,6 +30,7 @@ use yii\helpers\Url;
         'orders' => $orders,
         'headers' => $headers,
         'param' => $param,
+        'services' => $services,
     ]) ?>
     <div class="export-csv-link">
         <span>
