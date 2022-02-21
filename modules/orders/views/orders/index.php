@@ -27,6 +27,7 @@ use yii\helpers\Url;
     <?= $this->render('../layouts/_order_list', [
         'orders' => $orders,
         'headers' => $headers,
+        'param' => $param,
     ]) ?>
     <div class="export-csv-link">
         <span>

@@ -3,14 +3,63 @@
 namespace app\modules\orders\models\searches;
 
 use app\modules\orders\models\models\Orders;
+use app\modules\orders\models\models\Services;
+use yii\base\Model;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
-use yii\db\ActiveRecord;
 
-class OrdersSearch extends ActiveRecord
+/**
+ *
+ * @property $mode
+ * @property $status
+ * @property $service
+ * @property $page
+ * @property $service_id
+ * @property $searchType
+ */
+
+class OrdersSearch extends Model
 {
     public const DEFAULT_PAGE_SIZE = 100;
     public const ALL_SERVICES_MENU = null;
+
+    public $mode;
+    public $status;
+    public $service;
+    public $page;
+    public $search;
+    public $searchType;
+
+    /**
+     * @var array|null[]
+     */
+    private array $params;
+
+    public function rules()
+    {
+        return
+            [
+                [['status', 'mode', 'service', 'page', 'searchType'], 'number'],
+                ['status', 'in', 'range' => array_keys(Orders::getStatuses())],
+                ['mode', 'in', 'range' => array_keys(Orders::getMode())],
+                ['service', 'in', 'range' => range(1, Services::find()->count())],
+                ['searchType', 'in', 'range' => array_keys(Orders::getSearchType())],
+                ['search', 'filter', 'filter' => function($value){
+                    return trim( str_replace(' ', '', $value), " \n\r\t\v\x00");
+                }],
+            ];
+    }
+
+    public function attributeLabels()
+    {
+        return ['mode' => 'mode',
+            'status' => 'status',
+            'service' => 'service',
+            'page' => 'page',
+            'search' => 'search',
+            'searchType' => 'searchType',
+        ];
+    }
 
     /**
      * @return Query
@@ -26,7 +75,7 @@ class OrdersSearch extends ActiveRecord
             'o.service_id service_id',
             'o.status status',
             'o.mode mode',
-            'date_format(from_unixtime(`o`.`created_at`), "%Y-%m-%d %H:%i:%s") as `created`',])
+            'o.created_at created',])
             ->from(['orders o'])
             ->innerJoin('services s', 's.id = o.service_id')
             ->innerJoin('users u', 'u.id = o.user_id ');
@@ -58,14 +107,14 @@ class OrdersSearch extends ActiveRecord
     {
         if (isset($param['status'])) {
             $status = $param['status'];
-            $query->where("o.status = $status");
+            $query->where(['o.status' => $status]);
         }
-        if   (isset($param['search']) && isset($param['search-type'])) {
+        if   (isset($param['search']) && isset($param['searchType'])) {
             $search=$param['search'];
-            $searchType=$param['search-type'];
+            $searchType=$param['searchType'];
             switch ($searchType) {
                 case Orders::SEARCH_ORDER_ID:
-                    $query->andWhere("o.id = $search");
+                    $query->andWhere(['o.id' => $search]);
                     break;
                 case Orders::SEARCH_LINK:
                     $query->andWhere(['like', 'o.link', $search]);
@@ -86,11 +135,11 @@ class OrdersSearch extends ActiveRecord
         }
         if (isset($param['mode'])) {
             $mode=$param['mode'];
-            $query->andWhere("o.mode = $mode");
+            $query->andWhere(['o.mode' => $mode]);
         }
         if (isset($param['service'])) {
             $service = $param['service'];
-            $query->andWhere("o.service_id = $service");
+            $query->andWhere(['o.service_id' => $service]);
         }
         return $query;
     }
@@ -101,10 +150,12 @@ class OrdersSearch extends ActiveRecord
      */
     public function getOrders(array $param): ArrayDataProvider
     {
+
+        ini_set('memory_limit', 1170000000);
+
         $orders = $this
             ->getQuery($param, $this->getOrdersQuery())
             ->orderBy(['id' => SORT_DESC]);
-        ini_set('memory_limit', 170000000);
         $statuses = Orders::getStatuses();
         $modes = Orders::getMode();
         $data = [];
@@ -118,7 +169,7 @@ class OrdersSearch extends ActiveRecord
             $data['service_id'] = $order['service_id'];
             $data['status'] = $statuses[$order['status']];
             $data['mode'] = $modes[$order['mode']];
-            $data['created'] = $order['created'];
+            $data['created'] = date('Y-m-d H:i:s',$order['created']);
             $dataArray[] = $data;
         }
         return new ArrayDataProvider([
@@ -140,5 +191,31 @@ class OrdersSearch extends ActiveRecord
             ->getQuery($param, $this->getServicesQuery())
             ->groupBy('o.service_id')
             ->orderBy('service_count desc');
+    }
+
+    public function setParams($params)
+    {
+        $paramDefault = [
+            'status' => null,
+            'mode' => null,
+            'service' => null,
+            'page' => null,
+            'searchType' => null,
+            'search' => null
+        ];
+        $this->params = array_merge($paramDefault, $params);
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams(): array
+    {
+        $model = new OrdersSearch($this->params);
+        if ($model->validate()) {
+            return $model->attributes;
+        } else {
+            return array_merge($this->params, ['error' => $model->errors]);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace app\modules\orders\controllers;
 
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\searches\OrdersSearch;
-use yii\base\InvalidConfigException;
+use Yii;
 use yii\web\Controller;
 
 /**
@@ -15,14 +15,15 @@ class OrdersController extends Controller
     /**
      * Renders the index view for the module
      * @return string
-     * @throws InvalidConfigException
      */
     public function actionIndex(): string
     {
-        $param = Orders::getParams();
+        $orderSearch = new OrdersSearch();
+        $orderSearch->setParams(Yii::$app->request->get());
+        $param = $orderSearch->getParams();
         $statuses = Orders::getStatuses();
         $search = Orders::getSearchType();
-        $orders = (new OrdersSearch())->getOrders($param);
+        $orders = $orderSearch->getOrders($param);
         $headers = (new Orders())->attributeLabels();
         return $this->render('index', [
             'orders' => $orders,

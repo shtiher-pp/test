@@ -2,24 +2,34 @@
 
 namespace app\modules\orders\models\forms;
 
-use app\modules\orders\models\models\Orders;
-use app\modules\orders\models\searches\OrdersSearch;
-use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
+use Yii;
+use yii\base\Model;
+use yii\db\Query;
+use yii\web\RangeNotSatisfiableHttpException;
 
-class ExportForm extends ActiveRecord
+class ExportForm extends Model
 {
-    /**
-     * @return string
-     * @throws InvalidConfigException
-     */
-    public static function exportCsv(): string
+    private array $headers;
+    private Query $orders;
+
+    public function setOrders($orders)
     {
-        $param = Orders::getParams();
-        $orders  = (new OrdersSearch())->getQuery($param, (new OrdersSearch())->getOrdersQuery())
-            ->orderBy(['id' => SORT_DESC])->each();
-        $data = implode(';', (new Orders())->attributeLabels()) . "\r\n";
-        foreach ($orders as $order) {
+       $this->orders = $orders;
+    }
+
+    public function setHeaders($headers)
+    {
+        $this->headers = $headers;
+    }
+
+    /**
+     * @throws RangeNotSatisfiableHttpException
+     */
+    public function exportCsv()
+    {
+        $data = implode(';', $this->headers) . "\r\n";
+        $this->orders->orderBy(['id' => SORT_DESC]);
+        foreach ($this->orders->each() as $order) {
             $data .= $order['id'].
                 ';' . $order['full_name'] .
                 ';' . $order['link'] .
@@ -30,6 +40,9 @@ class ExportForm extends ActiveRecord
                 ';' . $order['created'] .
                 "\r\n";
         }
-        return $data;
+        return Yii::$app->response->sendContentAsFile($data, 'orders.csv', [
+            'mimeType' => 'application/csv',
+            'inline'   => false
+        ]);
     }
 }

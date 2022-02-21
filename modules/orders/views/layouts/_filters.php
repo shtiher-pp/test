@@ -35,7 +35,7 @@ use yii\widgets\ActiveForm;
                 'placeholder' =>  Yii::t('common', 'Search orders')
             ]) ?>
             <span class="input-group-btn search-select-wrap">
-            <?= Html::dropDownList('search-type', 1, $search, ['class' => 'form-control search-select']) ?>
+            <?= Html::dropDownList('searchType', 1, $search, ['class' => 'form-control search-select']) ?>
             <button type="submit" class="btn btn-default">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
             </button>
