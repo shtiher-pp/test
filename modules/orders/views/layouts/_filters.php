@@ -32,10 +32,11 @@ use yii\widgets\ActiveForm;
             <?=Html::tag('input','',['type' => 'text',
                 'name' => 'search',
                 'class' => 'form-control',
-                'placeholder' =>  Yii::t('common', 'Search orders')
+                'placeholder' =>  Yii::t('common', 'Search orders'),
+                'value' => isset($param['search']) ? $param['search'] : ''
             ]) ?>
             <span class="input-group-btn search-select-wrap">
-            <?= Html::dropDownList('searchType', 1, $search, ['class' => 'form-control search-select']) ?>
+            <?= Html::dropDownList('searchType', isset($param['searchType']) ? $param['searchType'] : 1, $search, ['class' => 'form-control search-select']) ?>
             <button type="submit" class="btn btn-default">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
             </button>

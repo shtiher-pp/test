@@ -139,7 +139,12 @@ class OrdersSearch extends Model
     {
 
         ini_set('memory_limit', 1170000000);
-
+        
+        if ($this->validate()) {
+            $this->params = $this->attributes;
+        } else {
+            $this->params = array_merge($this->params, ['error' => $this->errors]);
+        }
         $orders = $this
             ->getQuery($this->getOrdersQuery())
             ->orderBy(['id' => SORT_DESC]);
@@ -189,10 +194,6 @@ class OrdersSearch extends Model
      */
     public function getParams(): array
     {
-        if ($this->validate()) {
-            return $this->attributes;
-        } else {
-            return array_merge($this->params, ['error' => $this->errors]);
-        }
+            return $this->params;
     }
 }
