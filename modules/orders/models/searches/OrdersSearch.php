@@ -176,6 +176,12 @@ class OrdersSearch extends Model
         isset($params['page']) ?  $this->params['page'] = $params['page'] : $this->params['page'] = null;
         isset($params['searchType']) ?  $this->params['searchType'] = $params['searchType'] : $this->params['searchType'] = null;
         isset($params['search']) ?  $this->params['search'] = $params['search'] : $this->params['search'] = null;
+        $this->status = $this->params['status'];
+        $this->mode = $this->params['mode'];
+        $this->service = $this->params['service'];
+        $this->page = $this->params['page'];
+        $this->searchType = $this->params['searchType'];
+        $this->search = $this->params['search'];
     }
 
     /**
@@ -183,11 +189,10 @@ class OrdersSearch extends Model
      */
     public function getParams(): array
     {
-        $model = new OrdersSearch($this->params);
-        if ($model->validate()) {
-            return $model->attributes;
+        if ($this->validate()) {
+            return $this->attributes;
         } else {
-            return array_merge($this->params, ['error' => $model->errors]);
+            return array_merge($this->params, ['error' => $this->errors]);
         }
     }
 }
