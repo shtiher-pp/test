@@ -14,9 +14,14 @@ class ModeFilter extends CustomFilter
      */
     public function getMenu(): array
     {
-        $modeMenu = [['label' => Yii::t('common', 'All'), 'url' => [Url::current(["mode" => null])]]];
+        $modeMenu = [['label' => Yii::t('common', 'All'),
+            'url' => [Url::current(["mode" => null])], 'active' => isset($this->param['mode']) ? '' : 'true']];
         foreach (Orders::getMode() as $key => $value) {
-            $modeMenu[] = ['label' => $value, 'url' => [Url::current(["mode" => $key])]];
+            $active = '';
+            if ($this->param['mode'] == $key && isset($this->param['mode'])) {
+                $active = 'true';
+            }
+            $modeMenu[] = ['label' => $value, 'url' => [Url::current(["mode" => $key])], 'active' => $active];
         }
         return $modeMenu;
     }

@@ -19,9 +19,8 @@ class ExportController extends Controller
     {
         $orderSearch = new OrdersSearch();
         $orderSearch->setParams(Yii::$app->request->get());
-        $param = $orderSearch->getParams();
         $headers = (new Orders())->attributeLabels();
-        $orders  = $orderSearch->getQuery($param, $orderSearch->getOrdersQuery());
+        $orders  = $orderSearch->getQuery($orderSearch->getOrdersQuery());
         $export = new ExportForm();
         $export->setHeaders($headers);
         $export->setOrders($orders);

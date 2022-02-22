@@ -33,26 +33,28 @@ class OrdersSearch extends Model
     /**
      * @var array|null[]
      */
-    private array $params;
+    protected array $params;
 
     public function rules()
     {
         return
             [
-                [['status', 'mode', 'service', 'page', 'searchType'], 'number'],
+                [['status', 'mode', 'service', 'page', 'searchType',], 'number'],
                 ['status', 'in', 'range' => array_keys(Orders::getStatuses())],
                 ['mode', 'in', 'range' => array_keys(Orders::getMode())],
                 ['service', 'in', 'range' => range(1, Services::find()->count())],
                 ['searchType', 'in', 'range' => array_keys(Orders::getSearchType())],
+                [['search'], 'string', 'min' => 1],
                 ['search', 'filter', 'filter' => function($value){
-                    return trim( str_replace(' ', '', $value), " \n\r\t\v\x00");
+                    return trim( str_replace(',', '' ,$value), " \n\r\t\v\x00");
                 }],
             ];
     }
 
     public function attributeLabels()
     {
-        return ['mode' => 'mode',
+        return [
+            'mode' => 'mode',
             'status' => 'status',
             'service' => 'service',
             'page' => 'page',
@@ -68,7 +70,7 @@ class OrdersSearch extends Model
     {
         $query = new Query();
         $query->select(['o.id id' ,
-            'concat(u.first_name, ", ", u.last_name) full_name',
+            'concat(u.first_name, " ", u.last_name) full_name',
             'o.link link',
             'o.quantity quantity',
             's.name service',
@@ -83,35 +85,21 @@ class OrdersSearch extends Model
     }
 
     /**
-     * @return Query
-     */
-    public function getServicesQuery(): Query
-    {
-        $services = new Query();
-        $services->select(['s.id service_id',
-            's.name service',
-            'count(o.service_id) service_count'])
-            ->from(['services s'])
-            ->innerJoin('orders o', 'o.service_id = s.id')
-            ->innerJoin('users u', 'u.id = o.user_id ');
-        return $services;
-    }
-
-    /**
      * Формирует запрос с учетом условий фильтров
-     * @param array $param
+
      * @param Query $query
      * @return Query
      */
-    public function getQuery(array $param, Query $query): Query
+    public function getQuery(Query $query): Query
     {
+        $param = $this->getParams();
         if (isset($param['status'])) {
             $status = $param['status'];
             $query->where(['o.status' => $status]);
         }
-        if   (isset($param['search']) && isset($param['searchType'])) {
-            $search=$param['search'];
-            $searchType=$param['searchType'];
+        if   (isset($param['search']) && isset($param['searchType']) && ($param['search'] != '')) {
+            $search = $param['search'];
+            $searchType = $param['searchType'];
             switch ($searchType) {
                 case Orders::SEARCH_ORDER_ID:
                     $query->andWhere(['o.id' => $search]);
@@ -120,11 +108,11 @@ class OrdersSearch extends Model
                     $query->andWhere(['like', 'o.link', $search]);
                     break;
                 case Orders::SEARCH_USERNAME:
-                    if (strpos($search, ',')) {
-                        $userName = explode(',', $search);
+                    if (strpos($search, ' ')) {
+                        $userName = explode(' ', $search);
                         $query
-                            ->andWhere(['like', 'u.first_name', $userName[0]])
-                            ->andWhere(['like', 'u.last_name', $userName[1]]);
+                            ->andWhere(['or like', 'u.first_name', [$userName[0], $userName[1]]])
+                            ->andWhere(['or like', 'u.last_name', [$userName[0], $userName[1]]]);
                         break;
                     }
                     $query
@@ -134,7 +122,7 @@ class OrdersSearch extends Model
             }
         }
         if (isset($param['mode'])) {
-            $mode=$param['mode'];
+            $mode = $param['mode'];
             $query->andWhere(['o.mode' => $mode]);
         }
         if (isset($param['service'])) {
@@ -145,16 +133,15 @@ class OrdersSearch extends Model
     }
 
     /**
-     * @param array $param
      * @return ArrayDataProvider
      */
-    public function getOrders(array $param): ArrayDataProvider
+    public function getOrders(): ArrayDataProvider
     {
 
         ini_set('memory_limit', 1170000000);
 
         $orders = $this
-            ->getQuery($param, $this->getOrdersQuery())
+            ->getQuery($this->getOrdersQuery())
             ->orderBy(['id' => SORT_DESC]);
         $statuses = Orders::getStatuses();
         $modes = Orders::getMode();
@@ -167,8 +154,8 @@ class OrdersSearch extends Model
             $data['quantity'] = $order['quantity'];
             $data['service'] = $order['service'];
             $data['service_id'] = $order['service_id'];
-            $data['status'] = $statuses[$order['status']];
-            $data['mode'] = $modes[$order['mode']];
+            $data['status'] = isset($statuses[$order['status']]) ? $statuses[$order['status']] : null;
+            $data['mode'] = isset($modes[$order['mode']]) ? $modes[$order['mode']] : null;
             $data['created'] = date('Y-m-d H:i:s',$order['created']);
             $dataArray[] = $data;
         }
@@ -180,29 +167,15 @@ class OrdersSearch extends Model
         ]);
     }
 
-    /**
-     * Возвращает список сервисов с количеством записей в заказах
-     * @param $param
-     * @return Query
-     */
-    public function getServices($param): Query
-    {
-        return $this->getQuery($param, $this->getServicesQuery())
-            ->groupBy('o.service_id')
-            ->orderBy('service_count desc');
-    }
-
     public function setParams($params)
     {
-        $paramDefault = [
-            'status' => null,
-            'mode' => null,
-            'service' => null,
-            'page' => null,
-            'searchType' => null,
-            'search' => null
-        ];
-        $this->params = array_merge($paramDefault, $params);
+        $this->params = [];
+        isset($params['status']) ?  $this->params['status'] = $params['status'] : $this->params['status'] = null;
+        isset($params['mode']) ?  $this->params['mode'] = $params['mode'] : $this->params['mode'] = null;
+        isset($params['service']) ?  $this->params['service'] = $params['service'] : $this->params['service'] = null;
+        isset($params['page']) ?  $this->params['page'] = $params['page'] : $this->params['page'] = null;
+        isset($params['searchType']) ?  $this->params['searchType'] = $params['searchType'] : $this->params['searchType'] = null;
+        isset($params['search']) ?  $this->params['search'] = $params['search'] : $this->params['search'] = null;
     }
 
     /**

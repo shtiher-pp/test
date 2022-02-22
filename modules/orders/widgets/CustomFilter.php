@@ -33,7 +33,6 @@ class CustomFilter extends Widget
         $menu = Menu::widget([
             'items' => $this->menu,
             'encodeLabels' => false,
-            'firstItemCssClass' => 'active',
             'options' => [
                 'aria-labelledby' => 'dropdownMenu1',
                 'class' => 'dropdown-menu',

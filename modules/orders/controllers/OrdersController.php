@@ -4,6 +4,7 @@ namespace app\modules\orders\controllers;
 
 use app\modules\orders\models\models\Orders;
 use app\modules\orders\models\searches\OrdersSearch;
+use app\modules\orders\models\searches\ServicesSearch;
 use Yii;
 use yii\web\Controller;
 
@@ -22,9 +23,10 @@ class OrdersController extends Controller
         $orderSearch->setParams(Yii::$app->request->get());
         $param = $orderSearch->getParams();
         $statuses = Orders::getStatuses();
-        $services = $orderSearch->getServices($param);
+        $servicesSearch = new ServicesSearch($orderSearch);
+        $services = $servicesSearch->getServices();
         $search = Orders::getSearchType();
-        $orders = $orderSearch->getOrders($param);
+        $orders = $orderSearch->getOrders();
         $headers = (new Orders())->attributeLabels();
         return $this->render('index', [
             'orders' => $orders,

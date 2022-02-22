@@ -46,7 +46,9 @@ use yii\helpers\Html;
         ],
         ['attribute' => 'mode',
             'header' => ModeFilter::widget(['items' => 'menu',
-                'headers' => $headers['mode']]),
+                'headers' => $headers['mode'],
+                'param' => $param
+            ]),
         ],
         ['attribute' => 'created',
             'header' => $headers['created_at'],
